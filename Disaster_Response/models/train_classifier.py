@@ -1,10 +1,10 @@
 import sys
-# import libraries
 import pandas as pd
 import numpy as np
 import pickle
 import re
 from sqlalchemy import create_engine
+import joblib
 
 import nltk
 nltk.download(['punkt','wordnet','stopwords'])
@@ -23,7 +23,15 @@ from sklearn.feature_extraction.text import CountVectorizer, TfidfTransformer
 
 
 def load_data(database_filepath):
-    engine = create_engine(database_filepath)
+    '''
+    input:
+        database_filepath: File path where sql database was saved.
+    output:
+        X: Training message List.
+        Y: Training target.
+        category_names: Categorical name for labeling.
+    '''
+    engine = create_engine('sqlite:///'+database_filepath)
     df = pd.read_sql_table(database_filepath.rsplit('/',1)[1].split('.')[0], engine)
     X = df['message'].values
     Y = df[df.columns[4:]].values
@@ -32,6 +40,12 @@ def load_data(database_filepath):
     return X, Y, category_names
 
 def tokenize(text):
+    '''
+    input:
+        text: Message data for tokenization.
+    output:
+        clean_tokens: list after tokenization.
+    '''
     url_regex = 'http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+'
     lemmatizer=WordNetLemmatizer()
     # Detect URLs
@@ -47,6 +61,12 @@ def tokenize(text):
     return tokens
 
 def build_model():
+    '''
+    input:
+        None
+    output:
+        cv: GridSearch model result.
+    '''
     #create a pipeline
     pipeline = Pipeline([
     ('count',CountVectorizer(tokenizer = tokenize)),
@@ -66,15 +86,16 @@ def build_model():
 
 
 def evaluate_model(model, X_test, Y_test, category_names):
-    y_pred=pipeline.predict(X_test)
-    for column in range(0,Y_test.shape[1]):
-    print(column)
-    print(classification_report(Y_test[:,column], y_pred[:,column], output_dict=True))
+    y_pred=model.predict(X_test)
+    for column in range(Y_test.shape[1]):
+        print(category_names[column])
+        print(classification_report(Y_test.iloc[:,column], y_pred[:,column], output_dict=True))
+        print('---------------------------------')
 
 
 
 def save_model(model, model_filepath):
-    pass
+    joblib.dump(model,model_filepath)
 
 
 def main():
@@ -102,7 +123,7 @@ def main():
         print('Please provide the filepath of the disaster messages database '\
               'as the first argument and the filepath of the pickle file to '\
               'save the model to as the second argument. \n\nExample: python '\
-              'train_classifier.py ../data/DisasterResponse.db classifier.pkl')
+              'train_classifier.py ../data/DisasterResponse.db classifier.joblib')
 
 
 if __name__ == '__main__':
