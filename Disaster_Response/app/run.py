@@ -42,7 +42,12 @@ def index():
     # TODO: Below is an example - modify to extract data for your own visuals
     genre_counts = df.groupby('genre').count()['message']
     genre_names = list(genre_counts.index)
-    
+    #get count of all categories and store in a list
+    categories = df.columns[4:]
+    category_count = [df[category].sum() for category in categories]
+    #get most frequent categories
+    freq_count = df.iloc[:,4:].mean().sort_values(ascending=False)[0:10]
+    freq_category = freq_count.index
     # create visuals
     # TODO: Below is an example - modify to create your own visuals
     graphs = [
@@ -61,6 +66,40 @@ def index():
                 },
                 'xaxis': {
                     'title': "Genre"
+                }
+            }
+        },
+        {
+            'data':[
+                Bar(
+                    x=categories,
+                    y=category_count
+                )
+            ],
+            'layout':{
+                'title':'Frequency of Categories',
+                'yaxis':{
+                    'title':"Frequency(Count)"
+                },
+                'xaxis':{
+                    'title':"Category"
+                }
+            }
+        },
+        {
+            'data':[
+                Bar(
+                    x=freq_category,
+                    y=freq_count
+                )
+            ],
+            'layout':{
+                'title':'10 Most Frequent Categories',
+                'yaxis':{
+                    'title':"Percentage occurance"
+                },
+                'xaxis':{
+                    'title':"Category"
                 }
             }
         }
@@ -93,8 +132,8 @@ def go():
 
 
 def main():
-    app.run(host='0.0.0.0', port=3001, debug=True)
+   app.run(host='0.0.0.0', port=3001, debug=True)
 
 
 if __name__ == '__main__':
-    main()
+   main()
