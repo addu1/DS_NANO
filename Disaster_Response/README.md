@@ -3,7 +3,7 @@
 ### Project Motivation
 As per the requirements for this project I have tried to understand the classes for data engineering and apply it to create a disaster response message classifier using the data provided by Figure Eight.
 ___
-### Project Structure
+### Files in the repository
     .
     ├── app     
     │   ├── run.py                           # Initializer for flask app
