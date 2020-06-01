@@ -1,5 +1,26 @@
 # Disaster Response Pipeline Project
 
+### Project Motivation
+As per the requirements for this project I have tried to understand the classes for data engineering and apply it to create a disaster response message classifier using the data provided by Figure Eight.
+___
+### Project Structure
+    .
+    ├── app     
+    │   ├── run.py                           # Initializer for flask app
+    │   └── templates   
+    │       ├── go.html                      # Results page 
+    │       └── master.html                  # Home page
+    ├── data                   
+    │   ├── disaster_categories.csv          # Categories Dataset
+    │   ├── disaster_messages.csv            # Messages Dataset
+    │   └── process_data.py                  # Wrangling data
+    ├── models
+    │   └── train_classifier.py              # MLP model
+    └── README.md
+___
+### Requirements:
+Python, Flask, Plotly, NLTK, Pandas, Sklearn, SQLalchemy
+___
 ### Instructions:
 1. Run the following commands in the project's root directory to set up your database and model.
 
