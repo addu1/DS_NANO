@@ -86,15 +86,31 @@ def build_model():
 
 
 def evaluate_model(model, X_test, Y_test, category_names):
+	'''
+    input:
+        model: Model output from function build_model().
+		X_test: predictor Test split from data
+		Y_test: output test split from data
+		category_names: list of category names obtained from load_data().
+    output:
+        None
+    '''
     y_pred=model.predict(X_test)
     for column in range(Y_test.shape[1]):
         print(category_names[column])
-        print(classification_report(Y_test.iloc[:,column], y_pred[:,column], output_dict=True))
+        print(classification_report(Y_test[:,column], y_pred[:,column], output_dict=True))
         print('---------------------------------')
 
 
 
 def save_model(model, model_filepath):
+	'''
+    input:
+        model: Model output from function build_model().
+		model_filepath: filepath to save the model at.
+    output:
+        None
+    '''
     joblib.dump(model,model_filepath)
 
 
